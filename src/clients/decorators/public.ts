@@ -107,8 +107,12 @@ import type {
   MaybeExtractEventArgsFromAbi,
 } from '../../types'
 import type { PublicClient } from '../createPublicClient'
+import type { Transport } from '../transports'
 
-export type PublicActions<TChain extends Chain | undefined = Chain> = {
+export type PublicActions<
+  TChain extends Chain | undefined = Chain,
+  TTransportType extends string = string,
+> = {
   call: (args: CallParameters<TChain>) => Promise<CallReturnType>
   createBlockFilter: () => Promise<CreateBlockFilterReturnType>
   createContractEventFilter: <
@@ -226,7 +230,7 @@ export type PublicActions<TChain extends Chain | undefined = Chain> = {
     args: WatchBlockNumberParameters,
   ) => ReturnType<typeof watchBlockNumber>
   watchBlocks: (
-    args: WatchBlocksParameters<TChain>,
+    args: WatchBlocksParameters<TChain, TTransportType>,
   ) => ReturnType<typeof watchBlocks>
   watchContractEvent: <
     TAbi extends Abi | readonly unknown[],
@@ -247,10 +251,11 @@ export type PublicActions<TChain extends Chain | undefined = Chain> = {
 
 export const publicActions = <
   TChain extends Chain | undefined,
-  TClient extends PublicClient<any, any>,
+  TTransportType extends string,
+  TClient extends PublicClient<Transport<TTransportType>, any>,
 >(
   client: TClient,
-): PublicActions<TChain> => ({
+): PublicActions<TChain, TTransportType> => ({
   call: (args) => call(client, args),
   createBlockFilter: () => createBlockFilter(client),
   createContractEventFilter: (args) => createContractEventFilter(client, args),

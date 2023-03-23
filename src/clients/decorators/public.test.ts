@@ -10,6 +10,7 @@ import {
   wagmiContractConfig,
   walletClient,
 } from '../../_test'
+import { webSocketClient } from '../../_test/utils'
 import { publicActions } from './public'
 
 test('default', async () => {

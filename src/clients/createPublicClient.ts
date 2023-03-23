@@ -18,7 +18,9 @@ export type PublicClient<
   TChain extends Chain | undefined = Chain,
   TIncludeActions extends boolean = true,
 > = Client<TTransport, TChain, PublicRequests> &
-  (TIncludeActions extends true ? PublicActions<TChain> : {})
+  (TIncludeActions extends true
+    ? PublicActions<TChain, ReturnType<TTransport>['config']['type']>
+    : {})
 
 export type PublicClientArg<
   TTransport extends Transport = Transport,
